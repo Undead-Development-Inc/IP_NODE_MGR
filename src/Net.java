@@ -20,7 +20,10 @@ public class Net {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
 
                 if(!IPs.contains(socket.getInetAddress().toString())){
-                    IPs.add(socket.getInetAddress().toString());
+                    String IP = socket.getInetAddress().toString();
+                    IP.replace("/","");
+                    System.out.println("ADDING IP: "+ IP);
+                    IPs.add(IP);
                 }
 
                 for(String IP: IPs){
