@@ -1,3 +1,4 @@
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -38,6 +39,40 @@ public class Net {
 
             } catch (Exception ex) {
 
+            }
+        }
+    }
+
+    public static void NodeMgr(){
+        while(true){
+            try{
+                ServerSocket serverSocket = new ServerSocket(2001);
+                Socket socket = serverSocket.accept();
+
+                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+
+                String Request = (String) objectInputStream.readObject();
+
+                if(Request.matches("GET_IPS")){
+                    objectOutputStream.writeObject(IPs);
+                    System.out.println("SENT MANAGER ARRAYLIST OF NODES IP's");
+                }
+                if(Request.matches("DEL_IP")){
+                    String IP = (String) objectInputStream.readObject();
+                    if(IPs.contains(IP)){
+                        continue;
+                    }
+                    IPs.remove(IP);
+                }
+
+                objectInputStream.close();
+                objectOutputStream.close();
+                socket.close();
+                serverSocket.close();
+
+            }catch (Exception exception){
+                System.out.println("EXEPTION: "+ exception);
             }
         }
     }
