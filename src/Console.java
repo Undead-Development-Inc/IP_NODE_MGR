@@ -11,13 +11,25 @@ public class Console {
         while(true){
             try{
 //                System.out.printf(Settings.RESET);
+                Thread Status_IP = new Thread(Net::IP_STATUS);
+                Status_IP.start();
                 System.out.println("Please Enter A Command: \n");
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
                 String Req = bufferedReader.readLine();
 
+                if(Req.matches("ADD_NODE")){
+                    bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                    String Node_IP = bufferedReader.readLine();
+                    DB_MGR.DB_SETIP(Node_IP, 1.0);
+                    System.out.println("ADDED NODE: "+ Node_IP);
+                }
                 if(Req.matches("Status")){
-                    GUI_IPSTATUS("192.168.1.1", "ACTIVE", Settings.GREEN_BOLD);
-
+                    Net.IP_GUI();
+                }
+                if(Req.matches("Commands")){
+                    System.out.println("COMMANDS: \n");
+                    System.out.println(Settings.WHITE + "'ADD_NODE'  --ADD NODE IP MANUALLY");
+                    System.out.println(Settings.WHITE + "'Status'  --PROVIDES STATUS OF NODES \n \n");
                 }
 
             }catch (Exception ex){
