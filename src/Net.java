@@ -9,33 +9,20 @@ public class Net {
     public static ArrayList<String> IPs = new ArrayList<>();
     public static ArrayList<String> TEMP_IPs = new ArrayList<>();
 
-    public static void IPNet(){
+    public static void IP_STATUS(){
         while(true) {
             try {
-                System.out.println("STARTING IP NODE MANAGER");
-                System.out.println("WAITING FOR CONNECTION!");
-                ServerSocket serverSocket = new ServerSocket(2000);
-                Socket socket = serverSocket.accept();
-                System.out.println("GOT CONNECTION FROM: " + socket.getInetAddress().toString());
-
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-
-                if(!IPs.contains(socket.getInetAddress().toString())){
-                    String IP = socket.getInetAddress().toString();
-                    IP.replace("/","");
-                    System.out.println("ADDING IP: "+ IP);
-                    IPs.add(IP);
-                }
-
                 for(String IP: IPs){
-                    if(!IP.matches(socket.getInetAddress().toString())){
-                        TEMP_IPs.add(IP);
-                    }
+                    TEMP_IPs.add(IP);
+                    Socket socket = new Socket(IP, 10000);
+                    TEMP_IPs.remove(IP);
+                    socket.close();
                 }
-                objectOutputStream.writeObject(TEMP_IPs);
-                objectOutputStream.close();
-                socket.close();
-                serverSocket.close();
+
+                for(String NRIP: TEMP_IPs){
+                    IPs.remove(NRIP);
+                    DB_MGR.DB_UPDATEIP_STATUS(NRIP, DB_MGR.DB_GETIP_VER(NRIP), false);
+                }
 
             } catch (Exception ex) {
 
@@ -43,37 +30,6 @@ public class Net {
         }
     }
 
-    public static void NodeMgr(){
-        while(true){
-            try{
-                ServerSocket serverSocket = new ServerSocket(2001);
-                Socket socket = serverSocket.accept();
 
-                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
 
-                String Request = (String) objectInputStream.readObject();
-
-                if(Request.matches("GET_IPS")){
-                    objectOutputStream.writeObject(IPs);
-                    System.out.println("SENT MANAGER ARRAYLIST OF NODES IP's");
-                }
-                if(Request.matches("DEL_IP")){
-                    String IP = (String) objectInputStream.readObject();
-                    if(IPs.contains(IP)){
-                        continue;
-                    }
-                    IPs.remove(IP);
-                }
-
-                objectInputStream.close();
-                objectOutputStream.close();
-                socket.close();
-                serverSocket.close();
-
-            }catch (Exception exception){
-                System.out.println("EXEPTION: "+ exception);
-            }
-        }
-    }
 }

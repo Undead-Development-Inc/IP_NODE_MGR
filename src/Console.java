@@ -11,7 +11,6 @@ public class Console {
         while(true){
             try{
 //                System.out.printf(Settings.RESET);
-                DB_MGR.DB_GETIP();
                 System.out.println("Please Enter A Command: \n");
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
                 String Req = bufferedReader.readLine();
