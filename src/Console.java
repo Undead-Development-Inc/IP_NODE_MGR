@@ -31,6 +31,11 @@ public class Console {
                     System.out.println(Settings.WHITE + "'ADD_NODE'  --ADD NODE IP MANUALLY");
                     System.out.println(Settings.WHITE + "'Status'  --PROVIDES STATUS OF NODES \n \n");
                 }
+                if(Req.matches("CHECK_IP")){
+                    bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                    String Node_IP = bufferedReader.readLine();
+                    Net.IP_CHECKACTIVE(Node_IP);
+                }
 
             }catch (Exception ex){
                 System.out.println("ERROR: " + ex);

@@ -10,6 +10,18 @@ public class Net {
     public static ArrayList<String> IPs = new ArrayList<>();
     public static ArrayList<String> TEMP_IPs = new ArrayList<>();
 
+    public static void IP_CHECKACTIVE(String IP){
+        try {
+            System.out.println("CHECKING IP: "+ IP);
+            Socket socket = new Socket(IP, 20);
+            System.out.println("CONNECTED PING TO: "+ IP);
+            socket.close();
+            return;
+        }catch (Exception ex){
+            System.out.println(ex);
+        }
+    }
+
     public static void IP_STATUS(){ //CHECKS IF NODE IS ALIVE
         while(true) {
             try {
@@ -18,7 +30,7 @@ public class Net {
 //                    System.out.println("GOT IP: "+ IP);
                     TEMP_IPs.clear();
                     TEMP_IPs.add(IP);
-                    Socket socket = new Socket(IP, 10000);
+                    Socket socket = new Socket("52.201.190.15", 20);
                     socket.setSoTimeout(1);
 //                    System.out.println("PASSED");
                     TEMP_IPs.remove(IP);
